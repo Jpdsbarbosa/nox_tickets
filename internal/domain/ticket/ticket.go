@@ -10,6 +10,11 @@ import (
 
 type Status string
 
+var (
+	ErrUrgenciaInvalida  = errors.New("urgência inválida")
+	ErrGravidadeInvalida = errors.New("gravidade inválida")
+)
+
 const (
 	StatusAberto     Status = "aberto"
 	StatusEmCurso    Status = "em_curso"
