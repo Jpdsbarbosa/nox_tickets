@@ -123,7 +123,3 @@ func (uc *AtualizarTicketUseCase) Execute(input AtualizarTicketInput) (*Atualiza
 		Responsavel:  ticketExistente.Responsavel,
 	}, nil
 }
-
-// 4. atualiza status se fornecido
-
-// Executa o caso de uso
