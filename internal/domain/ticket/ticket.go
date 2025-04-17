@@ -3,6 +3,7 @@ package ticket
 import (
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,6 +14,7 @@ type Status string
 var (
 	ErrUrgenciaInvalida  = errors.New("urgência inválida")
 	ErrGravidadeInvalida = errors.New("gravidade inválida")
+	ErrCategoriaInvalida = errors.New("categoria inválida")
 )
 
 const (
@@ -99,6 +101,27 @@ type Ticket struct {
 	Modificacoes    []Modificacao
 }
 
+// ValidateCategoria verifica se a categoria é válida
+func ValidateCategoria(categoria Categoria) error {
+	categoriaLower := Categoria(strings.ToLower(string(categoria)))
+	switch categoriaLower {
+	case CategoriaFinanceiro,
+		CategoriaComercial,
+		CategoriaCompliance,
+		CategoriaContratos,
+		CategoriaGestores,
+		CategoriaMeds,
+		CategoriaOnboarding,
+		CategoriaOperacional,
+		CategoriaReclamacoes,
+		CategoriaTI,
+		CategoriaTrading:
+		return nil
+	default:
+		return ErrCategoriaInvalida
+	}
+}
+
 func NovoTicket(titulo, descricao string, categoria Categoria, subcategoria Subcategoria, abertoPor string) (*Ticket, error) {
 	if titulo == "" {
 		return nil, errors.New("titulo é obrigatório")
@@ -113,11 +136,17 @@ func NovoTicket(titulo, descricao string, categoria Categoria, subcategoria Subc
 		return nil, errors.New("abertura por é obrigatório")
 	}
 
+	// Validar e converter categoria para minúsculas
+	if err := ValidateCategoria(categoria); err != nil {
+		return nil, err
+	}
+	categoriaLower := Categoria(strings.ToLower(string(categoria)))
+
 	return &Ticket{
 		ID:           uuid.New().String(),
 		Titulo:       titulo,
 		Descricao:    descricao,
-		Categoria:    categoria,
+		Categoria:    categoriaLower,
 		Subcategoria: subcategoria,
 		Status:       StatusAberto,
 		AbertoPor:    abertoPor,
@@ -225,6 +254,45 @@ func (t *Ticket) SetGravidade(gravidade int, usuarioID string) error {
 	valorAnterior := t.Gravidade
 	t.Gravidade = gravidade
 	return t.registrarModificacao("gravidade", fmt.Sprintf("%d", valorAnterior), fmt.Sprintf("%d", gravidade), usuarioID)
+}
+
+// SetTitulo define o título do ticket e registra a modificação
+func (t *Ticket) SetTitulo(titulo string, usuarioID string) error {
+	if titulo == "" {
+		return errors.New("título é obrigatório")
+	}
+
+	valorAnterior := t.Titulo
+	t.Titulo = titulo
+	return t.registrarModificacao("titulo", valorAnterior, titulo, usuarioID)
+}
+
+// SetDescricao define a descrição do ticket e registra a modificação
+func (t *Ticket) SetDescricao(descricao string, usuarioID string) error {
+	if descricao == "" {
+		return errors.New("descrição é obrigatória")
+	}
+
+	valorAnterior := t.Descricao
+	t.Descricao = descricao
+	return t.registrarModificacao("descricao", valorAnterior, descricao, usuarioID)
+}
+
+// SetCategoria define a categoria do ticket e registra a modificação
+func (t *Ticket) SetCategoria(categoria Categoria, usuarioID string) error {
+	if categoria == "" {
+		return errors.New("categoria é obrigatória")
+	}
+
+	// Validar e converter categoria para minúsculas
+	if err := ValidateCategoria(categoria); err != nil {
+		return err
+	}
+	categoriaLower := Categoria(strings.ToLower(string(categoria)))
+
+	valorAnterior := t.Categoria
+	t.Categoria = categoriaLower
+	return t.registrarModificacao("categoria", string(valorAnterior), string(categoriaLower), usuarioID)
 }
 
 // registrarModificacao - registra uma nova modificacao no ticket

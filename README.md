@@ -84,3 +84,46 @@ project/
 - Integração com Google Chat
 - Sistema de upload de arquivos
 - Dashboard e relatórios 
+
+## Roadmap
+
+### Correções e Melhorias
+- [ ] Correção do filtro de categoria
+- [ ] Normalização de case sensitivity nas categorias
+- [ ] Implementação de validações robustas para campos obrigatórios
+- [ ] Validação de formatos de dados (CPF, e-mail)
+- [ ] Validação de transições de status
+
+### Novas Funcionalidades
+- [ ] Paginação na listagem de tickets
+- [ ] Filtros avançados (data, urgência/gravidade)
+- [ ] Sistema de busca por texto em título/descrição
+- [ ] Métricas e relatórios
+  - Tempo médio de resolução
+  - Distribuição por categoria
+  - Performance por equipe/responsável
+
+### Banco de Dados
+- [ ] Otimização de índices
+- [ ] Implementação de soft delete
+- [ ] Finalização das migrations para normalização
+
+### Documentação
+- [ ] Documentação completa dos endpoints da API
+- [ ] Guia detalhado de instalação/configuração
+- [ ] Documentação das regras de negócio
+
+### Testes
+- [ ] Ampliação da cobertura de testes unitários
+- [ ] Implementação de testes de integração
+- [ ] Testes de carga e performance
+
+### Segurança
+- [ ] Sistema de autenticação
+- [ ] Controle de acesso baseado em papéis (RBAC)
+- [ ] Rate limiting nos endpoints
+
+### Infraestrutura
+- [ ] Configuração de logs estruturados
+- [ ] Implementação de monitoramento
+- [ ] Preparação para containerização/deploy 

@@ -1,6 +1,7 @@
 package ticket
 
 import (
+	"errors"
 	"nox_tickets/internal/domain/ticket"
 	"time"
 )
@@ -54,15 +55,26 @@ func (uc *AtualizarTicketUseCase) Execute(input AtualizarTicketInput) (*Atualiza
 		return nil, err
 	}
 
+	// Validação: não permite modificar tickets finalizados ou cancelados
+	if ticketExistente.Status == ticket.StatusFinalizado || ticketExistente.Status == ticket.StatusCancelado {
+		return nil, errors.New("não é possível modificar um ticket finalizado ou cancelado")
+	}
+
 	// 2. atualiza os campos fornecidos
 	if input.Titulo != nil {
-		ticketExistente.Titulo = *input.Titulo
+		if err := ticketExistente.SetTitulo(*input.Titulo, input.UsuarioID); err != nil {
+			return nil, err
+		}
 	}
 	if input.Descricao != nil {
-		ticketExistente.Descricao = *input.Descricao
+		if err := ticketExistente.SetDescricao(*input.Descricao, input.UsuarioID); err != nil {
+			return nil, err
+		}
 	}
 	if input.Categoria != nil {
-		ticketExistente.Categoria = *input.Categoria
+		if err := ticketExistente.SetCategoria(*input.Categoria, input.UsuarioID); err != nil {
+			return nil, err
+		}
 	}
 	if input.Urgencia != nil {
 		if err := ticketExistente.SetUrgencia(*input.Urgencia, input.UsuarioID); err != nil {

@@ -32,7 +32,7 @@ type AtualizarStatusUseCase struct {
 }
 
 // construtor do usecase de atualizar status
-func NewAtualizarStatusTicketUseCase(repo ticket.Repository) *AtualizarStatusUseCase {
+func NewAtualizarStatusUseCase(repo ticket.Repository) *AtualizarStatusUseCase {
 	return &AtualizarStatusUseCase{
 		ticketRepository: repo,
 	}

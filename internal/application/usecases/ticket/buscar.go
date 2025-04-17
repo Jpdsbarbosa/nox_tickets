@@ -133,3 +133,10 @@ func (uc *BuscarTicketUseCase) Execute(input BuscarTicketInput) (*BuscarTicketOu
 		Contato:    ticket.Contato,
 	}, nil
 }
+
+// NewBuscarTicketUseCase cria uma nova instância do caso de uso de buscar ticket
+func NewBuscarTicketUseCase(ticketRepository ticket.Repository) *BuscarTicketUseCase {
+	return &BuscarTicketUseCase{
+		ticketRepository: ticketRepository,
+	}
+}
